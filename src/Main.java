@@ -11,6 +11,7 @@ public class Main {
                 "[4] for division",
                 "[5] to quit"
         };
+        int score = 0;
 
         // printing the menu
         System.out.println("Choose: " + menu[0]);
@@ -36,9 +37,12 @@ public class Main {
 
         if (option == 1) {
             while (true) {
-                play_addition(4);
+                int result = play_addition(1);
+                if (result == -6) break;
+                score += result;
             }
         }
+        System.out.println(score);
     }
 
     /*
@@ -49,33 +53,45 @@ public class Main {
         return (int) (Math.random() * range) + start;
     }
 
-    // todo - returns number of points scored
+    // returns number of points scored
     public static int play_addition(int level) {
         Scanner getin;
-        int[] numbers = new int[level];
+        int[] numbers = new int[level + 1];
 
         // generate numbers based on level
         int start = (int) Math.pow(10, level);
         int range = (int) Math.pow(10, level + 1) - start;
-        int min = generate_num(start, range);
-        int max = generate_num(start, range);
+        int sum = 0;
 
-        for (int i = 0; i < 10000000; i++) {
-            // numbers[i] = generate_num(start, range);
-            int x = generate_num(start, range);
-            if (x < min) min = x;
-            if (x > max) max = x;
+        for (int i = 0; i < level + 1; i++) {
+            numbers[i] = generate_num(start, range);
+            sum += numbers[i];
+            if (i == level) System.out.println(numbers[i]);
+            else System.out.print(numbers[i] + " + ");
         }
-        System.out.println("min = " + min + "\nmax = " + max);
+        System.out.println(sum);
 
         int answer;
         do {
             getin = new Scanner(System.in);
             System.out.print("> ");
             // first check if it is integer
-            if (getin.hasNextInt()) answer = getin.nextInt();
+            if (getin.hasNextInt()) {
+                answer = getin.nextInt();
+                break;
+            }
+            else if (getin.hasNext("q") || getin.hasNext("exit")) return -6;
             else System.out.println("Error - please provide valid input");
-        } while (!getin.hasNextInt());
-        return 0;
+        } while (true);
+
+        if (answer == sum) {
+            int points = generate_num((level - 1) * 10, level * 10);
+            System.out.printf("Correct! You got %d point(s)!\n", points);
+            return points;
+        }
+        else {
+            System.out.printf("Wrong! The answer was %d, you lost %d points.\n", sum, level);
+            return -level;
+        }
     }
 }
