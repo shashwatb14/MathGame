@@ -3,34 +3,47 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
 
-        System.out.println("Choose: [1] for addition");
-        System.out.println("        [2] for subtraction");
-        System.out.println("        [3] for multiplication");
-        System.out.println("        [4] for division");
-        System.out.println("        [5] to quit");
+        // menu choices
+        String[] menu = {
+                "[1] for addition",
+                "[2] for subtraction",
+                "[3] for multiplication",
+                "[4] for division",
+                "[5] to quit"
+        };
 
+        // printing the menu
+        System.out.println("Choose: " + menu[0]);
+        for (int i = 1, n = menu.length; i < n; i++) {
+            System.out.println("        " + menu[i]);
+        }
+
+        // input validation
         int option = 0;
         do {
             Scanner scanner = new Scanner(System.in);
             System.out.print(">>> ");
-            if (validate_option(scanner)) {
+            // first check if it is integer
+            if (scanner.hasNextInt()) {
                 option = scanner.nextInt();
-                if (option != 1 && option != 2 && option != 3 && option != 4 && option != 5) {
+                // check if it is a valid choice
+                if (option < 1 || option > 5) {
                     System.out.println("Error - please choose a valid option");
                 }
             }
-            else {
-                System.out.println("Error - please provide valid input");
-            }
-
-        } while (option != 1 && option != 2 && option != 3 && option != 4 && option != 5);
+            else System.out.println("Error - please provide valid input");
+        } while (option < 1 || option > 5);
     }
 
+    // returns random number from a specific range
+    // doesn't include the last number
     public static int generate_num(int start, int range) {
         return (int) (Math.random() * range) + start;
     }
 
-    public static boolean validate_option(Scanner check) {
-        return check.hasNextInt();
+    // todo - returns number of points scored
+    public static int play_addition(int level) {
+        Scanner scanner = new Scanner(System.in);
+        return 0;
     }
 }
