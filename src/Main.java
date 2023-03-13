@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import java.util.Date;
 
 public class Main {
     public static void main(String[] args) {
@@ -37,12 +38,24 @@ public class Main {
 
         if (option == 1) {
             while (true) {
+                // capture initial timing
+                Date d1 = new Date();
+                double start = d1.getTime();
+
                 int result = play_addition(1);
+
+                // capture final timing
+                Date d2 = new Date();
+                double end = d2.getTime();
+
+                // rogue value
                 if (result == -6) break;
                 score += result;
+                System.out.printf("Score: %6d\n", score);
+                System.out.println("\nTime taken: " + ((end - start) / 1000));
             }
         }
-        System.out.println(score);
+        System.out.println("Your final score: " + score);
     }
 
     /*
@@ -63,6 +76,12 @@ public class Main {
         int range = (int) Math.pow(10, level + 1) - start;
         int sum = 0;
 
+        System.out.println();
+        for (int i = 0; i < (level + 1) * 2 + 3; i++) {
+            System.out.print("-");
+        }
+        System.out.println("\n");
+
         for (int i = 0; i < level + 1; i++) {
             numbers[i] = generate_num(start, range);
             sum += numbers[i];
@@ -80,18 +99,23 @@ public class Main {
                 answer = getin.nextInt();
                 break;
             }
+            // rogue value
             else if (getin.hasNext("q") || getin.hasNext("exit")) return -6;
-            else System.out.println("Error - please provide valid input");
+            else {
+                System.out.println("Error - please provide valid input");
+                System.out.println("Tip: type 'q' or \"exit\" return to the menu.");
+            }
+
         } while (true);
 
         if (answer == sum) {
             int points = generate_num((level - 1) * 10, level * 10);
-            System.out.printf("Correct! You got %d point(s)!\n", points);
+            System.out.printf("\nCorrect! You got %d point(s)!\n", points);
             return points;
-        }
-        else {
-            System.out.printf("Wrong! The answer was %d, you lost %d points.\n", sum, level);
-            return -level;
+        } else {
+            int loss = generate_num((((level - 1) * 10) / 2) + 1, (level * 10) / 2);
+            System.out.printf("\nWrong! The answer was %d, you lost %d point(s).\n", sum, loss);
+            return -loss;
         }
     }
 }
