@@ -74,15 +74,9 @@ public class Main {
         for (int i = 0; i < level + 1; i++) {
             numbers[i] = generate_num(start, range);
             sum += numbers[i];
+
             if (i == 0) difference = numbers[i];
             else difference -= numbers[i];
-
-            // to ensure that the difference is never -6 (rogue value)
-            while (i == level - 1 && difference == -6) {
-                difference += numbers[i];
-                numbers[i] = generate_num(start, range);
-                difference -= numbers[i];
-            }
 
             if (i == level) System.out.println(numbers[i]);
             else System.out.print(numbers[i] + " " + operator + " ");
@@ -202,6 +196,8 @@ public class Main {
         } else {
             // loss points are half the range of win points
             int loss = generate_num((((level - 1) * 10) / 2) + 1, (level * 10) / 2);
+            // rogue value
+            if (loss == -6) loss = generate_num((((level - 1) * 10) / 2) + 1, (level * 10) / 2);
             System.out.printf("\nWrong! The answer was %d, you lost %d point(s).\n", result, loss);
             return -loss;
         }
