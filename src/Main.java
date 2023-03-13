@@ -12,7 +12,8 @@ public class Main {
                     "[2] for subtraction",
                     "[3] for multiplication",
                     "[4] for division",
-                    "[5] to quit"
+                    "[5] for mixed operations",
+                    "[6] to quit"
             };
 
             // printing the menu
@@ -30,13 +31,13 @@ public class Main {
                 if (getin.hasNextInt()) {
                     option = getin.nextInt();
                     // check if it is a valid choice
-                    if (option < 1 || option > 5) {
+                    if (option < 1 || option > 6) {
                         System.out.println("Error - please choose a valid option");
                     }
                 } else System.out.println("Error - please provide valid input");
-            } while (option < 1 || option > 5);
+            } while (option < 1 || option > 6);
 
-            if (option == 5) break;
+            if (option == 6) break;
             else {
                 int level = difficulty();
                 if (option == 1) play(level, '+');
