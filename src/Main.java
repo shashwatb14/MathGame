@@ -236,8 +236,8 @@ public class Main {
                 prev = num;
             } else if (operator == '*') {
                 // generate numbers for multiplication based on level
-                int start = (int) Math.pow(10, level - 1);
-                int range = (int) Math.pow(10, level);
+                int start = (level - 1) * 10 + 1;
+                int range = level * 10;
 
                 int num = generate_num(start, range);
                 System.out.print(" * " + num);
