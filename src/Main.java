@@ -320,6 +320,8 @@ public class Main {
         }
 
         System.out.println();
-        return check(result, level);
+
+        // double points for random
+        return check(result, level * 2);
     }
 }
