@@ -2,7 +2,10 @@ import java.util.Scanner;
 import java.util.Date;
 
 public class Main {
+
+    // keeps track of points
     static int score = 0;
+
     public static void main(String[] args) {
         while (true) {
 
@@ -47,6 +50,7 @@ public class Main {
                 else play(level, 'r');
             }
         }
+
         System.out.println("\nYour final score: " + score);
     }
 
@@ -68,12 +72,13 @@ public class Main {
             // first check if it is integer
             if (getin.hasNextInt()) {
                 level = getin.nextInt();
+
                 // check if it is within a valid range
-                if (level < 1 || level > 5) {
-                    System.out.println("Error - difficulty out of range (1 - 5)");
-                }
+                if (level < 1 || level > 5) System.out.println("Error - difficulty out of range (1 - 5)");
+
             } else System.out.println("Error - please provide valid input");
         } while (level < 1 || level > 5);
+
         return level;
     }
 
@@ -104,7 +109,7 @@ public class Main {
     }
 
     // validate and check input
-    public static int check(int result, int level) {
+    public static int check(long result, int level) {
         Scanner getin;
         int answer;
         do {
@@ -208,16 +213,28 @@ public class Main {
         return check(quotient, level);
     }
 
+    // prime number check for random division
+    public static boolean isPrime(int number) {
+
+        if (number == 2) return true;
+        if (number < 2 || number % 2 == 0) return false;
+
+        for (int i = 3; i < (int) Math.sqrt(number) + 1; i += 2) if (number % i == 0) return false;
+        return true;
+    }
+
     // method for mixed operations
     public static int random(int level) {
+
         int[] numbers = new int[generate_num(level + 1, level)];
         char[] operations = {'+', '-', '/', '*'};
-        int result = 0;
+        long result = 0;
         int prev = 1;
 
         for (int i = 0, n = numbers.length; i < n; i++) {
             char operator = operations[generate_num(0, 4)];
             if (operator == '+' || operator == '-' || i == 0) {
+
                 // generate numbers for arithmetic based on level
                 int start = (int) Math.pow(10, level);
                 int range = (int) Math.pow(10, level + 1) - start;
@@ -235,7 +252,8 @@ public class Main {
                 System.out.print(num);
                 prev = num;
             } else if (operator == '*') {
-                // generate numbers for multiplication based on level
+
+                // generate smaller numbers for multiplication based on level
                 int start = (level - 1) * 10 + 1;
                 int range = level * 10;
 
@@ -244,18 +262,23 @@ public class Main {
                 result *= num;
                 prev = num;
             } else {
-                int start = (int) Math.pow(10, level);
-                int range = (int) Math.pow(10, level + 2) - start;
 
-                int num = generate_num(start, range);
+                // generate smaller numbers for division based on level
+                int num = generate_num(2, prev);
 
-                while (prev % num != 0 || prev == num) num = generate_num(start, range);
+                if (isPrime(prev)) num = prev;
+                else {
+                    while (prev % num != 0 || prev == num) {
+                        num = generate_num(2, prev);
+                    }
+                }
 
                 System.out.print(" / " + num);
                 result /= num;
                 prev = num;
             }
         }
+
         System.out.println();
         return check(result, level);
     }
