@@ -1,12 +1,25 @@
 import java.util.Scanner;
 import java.util.Date;
+import java.io.*;
 
 public class Main {
 
     // keeps track of points
     static int score = 0;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+
+        File file = new File("src/score.txt");
+
+        // for reading file and making local saves
+        FileReader fr = new FileReader(file);
+        BufferedReader load = new BufferedReader(fr);
+
+        String name = load.readLine();
+        String scoreStr = load.readLine();
+
+        int highScore = Integer.parseInt(scoreStr);
+
         while (true) {
 
             // menu choices
@@ -18,6 +31,8 @@ public class Main {
                     "[5] for random operations",
                     "[6] to quit"
             };
+
+            System.out.printf("High-score: %d by %s\n", highScore, name);
 
             // printing the menu
             System.out.println("\nChoose: " + menu[0]);
@@ -52,6 +67,26 @@ public class Main {
         }
 
         System.out.println("\nYour final score: " + score);
+
+        // write to file only if current score > highScore
+        if (score >= highScore) {
+            System.out.println("\nCongratulations! New high-score!");
+            Scanner in = new Scanner(System.in);
+            System.out.print("Enter your name: ");
+            String winner = in.nextLine();
+
+            // write to file
+            FileWriter fw = new FileWriter(file);
+            PrintWriter save = new PrintWriter(fw);
+            save.write(winner + "\n");
+            save.println(score);
+
+            // always close files
+            save.close();
+            System.out.println("High-scored saved!");
+        }
+
+        load.close();
     }
 
     /*
@@ -115,16 +150,19 @@ public class Main {
         do {
             getin = new Scanner(System.in);
             System.out.print("> ");
+
             // first check if it is integer
             if (getin.hasNextInt()) {
                 answer = getin.nextInt();
                 break;
             }
+
             // rogue value
-            else if (getin.hasNext("q") || getin.hasNext("exit")) return -6;
+            else if (getin.hasNext("q") || getin.hasNext("l")) return -6;
+
             else {
                 System.out.println("Error - please provide valid input");
-                System.out.println("Tip: type 'q' or \"exit\" return to the menu.");
+                System.out.println("Tip: type 'q' to return to the menu.");
             }
         } while (true);
 
@@ -134,8 +172,10 @@ public class Main {
             System.out.printf("\nCorrect! You got %d point(s)!\n", points);
             return points;
         } else {
+
             // loss points are half the range of win points
             int loss = generate_num((((level - 1) * 10) / 2) + 1, (level * 10) / 2);
+
             // rogue value
             if (loss == -6) loss = generate_num((((level - 1) * 10) / 2) + 1, (level * 10) / 2);
             System.out.printf("\nWrong! The answer was %d, you lost %d point(s).\n", result, loss);
